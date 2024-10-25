@@ -1,23 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:meals/models/category.dart';
 import 'package:meals/data/dummy_data.dart';
 import 'package:meals/screens/meals.dart';
 import 'package:meals/widgets/category_grid_item.dart';
 
+import '../models/category.dart';
+
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});
-  
-  void _selectCategory(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>MealsScreen(title: "title", meals: [],),),);
+  const CategoriesScreen({
+    super.key,
+  });
+
+  void _selectCategory(BuildContext context, Category category) {
+    final filteredmeals = dummyMeals
+        .where((meal) => meal.categories.contains(category.id))
+        .toList();
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => MealsScreen(
+          title: category.title,
+          meals: filteredmeals,
+        ),
+      ),
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pick a category',style: TextStyle(color: Colors.white),),
+        title: const Text(
+          'Pick a category',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: GridView(
-        padding: EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(24.0),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 3 / 2,
@@ -26,9 +43,12 @@ class CategoriesScreen extends StatelessWidget {
         ),
         children: [
           for (final category in availableCategories)
-            CategoryGridItem(category: category,onselectCategory:(){
-              _selectCategory(context);
-            },),
+            CategoryGridItem(
+              category: category,
+              onselectCategory: () {
+                _selectCategory(context, category);
+              },
+            ),
         ],
       ),
     );
