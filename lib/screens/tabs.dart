@@ -13,7 +13,7 @@ class _TabsScreenState extends State<TabsScreen> {
   int selectedPageIndex = 0;
   void _selectPage(int index) {
     setState(() {
-      _selectPage(index);
+      selectedPageIndex = index;
     });
   }
 
